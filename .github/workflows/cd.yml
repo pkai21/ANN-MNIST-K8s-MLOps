@@ -84,20 +84,46 @@ jobs:
           echo "Waiting for API..."
 
           for i in {1..30}; do
-            if kubectl run health-check \
+
+            kubectl delete pod health-check \
               -n ${NAMESPACE} \
-              --rm \
+              --ignore-not-found=true
+
+            kubectl run health-check \
+              -n ${NAMESPACE} \
               --restart=Never \
               --image=curlimages/curl \
-              -- \
-              curl --fail --silent http://${DEPLOYMENT}:8000/health; then
+              --command -- \
+              curl --fail --silent --show-error \
+              http://${DEPLOYMENT}:8000/health
+
+            if kubectl wait \
+              --for=jsonpath='{.status.phase}'=Succeeded \
+              pod/health-check \
+              -n ${NAMESPACE} \
+              --timeout=10s; then
 
               echo ""
               echo "API is healthy!"
+
+              kubectl logs health-check -n ${NAMESPACE}
+
+              kubectl delete pod health-check \
+                -n ${NAMESPACE} \
+                --ignore-not-found=true
+
               exit 0
             fi
 
             echo "API not ready yet..."
+
+            kubectl logs health-check \
+              -n ${NAMESPACE} || true
+
+            kubectl delete pod health-check \
+              -n ${NAMESPACE} \
+              --ignore-not-found=true
+
             sleep 3
           done
 
