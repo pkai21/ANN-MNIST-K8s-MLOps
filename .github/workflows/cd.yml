@@ -84,7 +84,14 @@ jobs:
           echo "Waiting for API..."
 
           for i in {1..30}; do
-            if curl --fail --silent http://127.0.0.1:30080/health; then
+            if kubectl run health-check \
+              -n ${NAMESPACE} \
+              --rm \
+              --restart=Never \
+              --image=curlimages/curl \
+              -- \
+              curl --fail --silent http://${DEPLOYMENT}:8000/health; then
+
               echo ""
               echo "API is healthy!"
               exit 0
@@ -97,7 +104,10 @@ jobs:
           echo "Health check failed."
 
           kubectl get pods -n ${NAMESPACE} -o wide
+          kubectl get service -n ${NAMESPACE}
+
           kubectl describe pods -n ${NAMESPACE}
+
           kubectl logs \
             -n ${NAMESPACE} \
             -l app=ann-mnist-api \
