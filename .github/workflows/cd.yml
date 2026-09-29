@@ -21,7 +21,7 @@ jobs:
       NAMESPACE: ann-mnist
       DEPLOYMENT: ann-mnist-api
       CONTAINER: ann-mnist-api
-      IMAGE: ghcr.io/${{ github.repository }}:sha-${{ github.event.workflow_run.head_sha }}
+      IMAGE: ghcr.io/pkai21/ann-mnist-k8s-mlops:sha-${{ github.event.workflow_run.head_sha }}
 
     steps:
 
