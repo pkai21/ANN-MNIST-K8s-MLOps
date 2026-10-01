@@ -13,3 +13,9 @@ data
 *.md
 
 models/
+
+infrastructure/terraform/.terraform/
+infrastructure/terraform/*.tfstate
+infrastructure/terraform/*.tfstate.*
+infrastructure/terraform/crash.log
+infrastructure/terraform/crash.*.log
