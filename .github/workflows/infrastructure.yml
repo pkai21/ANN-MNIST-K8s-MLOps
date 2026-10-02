@@ -1,0 +1,47 @@
+name: Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "infrastructure/**"
+      - ".github/workflows/infrastructure.yml"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "infrastructure/**"
+      - ".github/workflows/infrastructure.yml"
+
+jobs:
+  terraform:
+    runs-on: [self-hosted, linux, x64]
+
+    defaults:
+      run:
+        working-directory: infrastructure/terraform
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
