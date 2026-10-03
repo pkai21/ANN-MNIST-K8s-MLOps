@@ -1,6 +1,14 @@
 terraform {
   required_version = ">= 1.6.0"
 
+  cloud {
+    organization = "pkai21"
+
+    workspaces {
+      name = "ann-mnist-k8s-monitoring"
+    }
+  }
+
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"

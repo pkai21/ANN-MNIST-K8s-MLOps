@@ -19,6 +19,9 @@ jobs:
   terraform:
     runs-on: [self-hosted, linux, x64]
 
+    env:
+      TF_TOKEN_app_terraform_io: ${{ secrets.HCP_TERRAFORM_TOKEN }}
+
     defaults:
       run:
         working-directory: infrastructure/terraform
