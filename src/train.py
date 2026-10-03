@@ -31,7 +31,7 @@ def get_model_version():
     return version
 
 def train():
-    train_dataset, _ = get_datasets()
+    train_dataset, _ = get_dataset
 
     batch_size = 64
     learning_rate = 0.001
