@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.6.0"
 
   cloud {
-    organization = "pkai21"
+    organization = "ann-mnist-k8s-monitoring"
 
     workspaces {
       name = "ann-mnist-k8s-monitoring"
